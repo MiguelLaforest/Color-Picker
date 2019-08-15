@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "parcel app/index.html -p 8080",
     "devopen": "parcel app/index.html -p 8080 --open",
-    "build": "parcel build app/index.html -d build"
+    "build": "parcel build app/index.html --public-url ./ -d build"
   },
   "author": "",
   "license": "ISC",
