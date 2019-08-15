@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Color Picker</title>
+  <link rel="stylesheet" href="styles/main.scss">
+  <a href="contact.html"></a>
+  <a href="about.html"></a>
+</head>
+
+<body>
+  <header>
+    <h1>color picker</h1>
+  </header>
+  <div id="inputs">
+    <!-- HSLA -->
+    <div class="H">
+      <span>H</span>
+      <input type="number" min="0" max="360" value="0" step="1" class="H-input H-number">
+      <input type="range" min="0" max="360" value="0" step="1" class="H-input H-slider">
+    </div>
+
+    <div class="S">
+      <span>S</span>
+      <input type="number" min="0" max="100" value="0" step="1" class="S-input S-number ">
+      <input type="range" min="0" max="100" value="0" step="1" class="S-input S-slider">
+    </div>
+
+    <div class="L">
+      <span>L</span>
+      <input type="number" min="0" max="100" value="0" step="1" class="L-input L-number ">
+      <input type="range" min="0" max="100" value="0" step="1" class="L-input L-slider">
+    </div>
+
+    <!-- RGBA -->
+    <div class="R">
+      <span>R</span>
+      <input type="number" min="0" max="255" value="0" step="1" class="R-input R-number ">
+      <input type="range" min="0" max="255" value="0" step="1" class="R-input R-slider">
+    </div>
+
+    <div class="G">
+      <span>G</span>
+      <input type="number" min="0" max="255" value="0" step="1" class="G-input G-number ">
+      <input type="range" min="0" max="255" value="0" step="1" class="G-input G-slider">
+    </div>
+
+    <div class="B">
+      <span>B</span>
+      <input type="number" min="0" max="255" value="0" step="1" class="B-input B-number ">
+      <input type="range" min="0" max="255" value="0" step="1" class="B-input B-slider">
+    </div>
+
+    <div class="A">
+      <span>A</span>
+      <input type="number" min="0" max="1" value="1" step="0.01" class="A-input A-number ">
+      <input type="range" min="0" max="1" value="1" step="0.01" class="A-input A-slider">
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="color-combinations">
+      <div id="monochromatic">
+        <span>monochromatic</span>
+        <div class="colors"></div>
+      </div>
+      <div id="analogous">
+        <span>analogous</span>
+        <div class="colors"></div>
+      </div>
+      <div id="complementary">
+        <span>complementary</span>
+        <div class="colors"></div>
+      </div>
+      <div id="split-complementary">
+        <span>split-complementary</span>
+        <div class="colors"></div>
+      </div>
+      <div id="triad">
+        <span>triad</span>
+        <div class="colors"></div>
+      </div>
+
+      <div id="double-complementary">
+        <span>double complementary</span>
+        <div class="colors"></div>
+      </div>
+    </div>
+
+
+    <div id="outputs">
+      <div id="hex">
+        <span>hex</span>
+        <div class="value">0</div>
+      </div>
+      <div id="rbga">
+        <span>rbga</span>
+        <div class="value">0</div>
+      </div>
+      <div id="hsla">
+        <span>hsla</span>
+        <div class="value">0</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/main.ts"></script>
+</body>
+
+</html>
