@@ -1,49 +1,27 @@
 import Color from "./modules/Color";
 
-const hueInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".H-input"
-);
-const saturationInputs = <NodeListOf<
-  HTMLInputElement
->>document.querySelectorAll(".S-input");
-const luminanceInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".L-input"
-);
-
-const redInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".R-input"
-);
-const greenInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".G-input"
-);
-const blueInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".B-input"
-);
-
-const alphaInputs = <NodeListOf<HTMLInputElement>>document.querySelectorAll(
-  ".A-input"
-);
-
+const hueInputs = document.querySelectorAll(".H-input");
+const saturationInputs = document.querySelectorAll(".S-input");
+const luminanceInputs = document.querySelectorAll(".L-input");
+const redInputs = document.querySelectorAll(".R-input");
+const greenInputs = document.querySelectorAll(".G-input");
+const blueInputs = document.querySelectorAll(".B-input");
+const alphaInputs = document.querySelectorAll(".A-input");
 const H_number = document.querySelector(".H-number");
 const S_number = document.querySelector(".S-number");
 const L_number = document.querySelector(".L-number");
-
 const R_number = document.querySelector(".R-number");
 const G_number = document.querySelector(".G-number");
 const B_number = document.querySelector(".B-number");
 const A_number = document.querySelector(".A-number");
-
 const H_slider = document.querySelector(".H-slider");
 const S_slider = document.querySelector(".S-slider");
 const L_slider = document.querySelector(".L-slider");
-
 const R_slider = document.querySelector(".R-slider");
 const G_slider = document.querySelector(".G-slider");
 const B_slider = document.querySelector(".B-slider");
 const A_slider = document.querySelector(".A-slider");
-
 const color = new Color();
-
 updateRGBA();
 updateHSLA();
 updateColorPreview(
@@ -51,7 +29,6 @@ updateColorPreview(
     Color.HSLAtoRGBA({ H: color.H, S: color.S, L: color.L, A: color.A })
   )
 );
-
 hueInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.H = parseInt(input.value);
@@ -61,7 +38,6 @@ hueInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 saturationInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.S = parseInt(input.value);
@@ -72,7 +48,6 @@ saturationInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 luminanceInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.L = parseInt(input.value);
@@ -83,7 +58,6 @@ luminanceInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 redInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.R = parseInt(input.value);
@@ -94,7 +68,6 @@ redInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 greenInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.G = parseInt(input.value);
@@ -105,7 +78,6 @@ greenInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 blueInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.B = parseInt(input.value);
@@ -116,17 +88,14 @@ blueInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
-
 alphaInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.A = parseInt(input.value);
     input.value = color.A.toString();
     updateHSLA();
-
     updateColorPreview(color.hex);
   });
 });
-
 function updateRGBA() {
   R_number.value = color.R;
   R_slider.value = color.R;
@@ -137,7 +106,6 @@ function updateRGBA() {
   A_number.value = color.A;
   A_slider.value = color.A;
 }
-
 function updateHSLA() {
   H_number.value = color.H;
   H_slider.value = color.H;
@@ -148,8 +116,7 @@ function updateHSLA() {
   A_number.value = color.A;
   A_slider.value = color.A;
 }
-
-function updateColorPreview(hex: string) {
+function updateColorPreview(hex) {
   document.body.style.backgroundColor = hex;
   document.documentElement.style.setProperty(
     "--bg",
@@ -162,7 +129,6 @@ function updateColorPreview(hex: string) {
       })
     )
   );
-
   displayColorCombination("monochromatic", color.monochromatic());
   displayColorCombination("analogous", color.analogous());
   displayColorCombination("complementary", color.complementary());
@@ -170,12 +136,9 @@ function updateColorPreview(hex: string) {
   displayColorCombination("triad", color.triad());
   displayColorCombination("double-complementary", color.doubleComplementary());
 }
-
-function displayColorCombination(name: string, combination) {
+function displayColorCombination(name, combination) {
   const container = document.getElementById(name).querySelector(".colors");
-
   container.innerHTML = "";
-
   for (const [ key, value ] of Object.entries(combination)) {
     if (combination.hasOwnProperty(key)) {
       const div = document.createElement("div");
