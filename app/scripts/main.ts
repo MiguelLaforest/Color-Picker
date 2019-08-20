@@ -1,5 +1,20 @@
 import Color from "./modules/Color";
 
+class ColorInfo {
+  rgba: string;
+  hsla: string;
+  hex: string;
+
+  constructor(color: string) {
+    const { R, G, B } = Color.HEXtoRGBA(color);
+    const { H, S, L } = Color.RGBAtoHSLA({ R, G, B });
+
+    this.rgba = `rgb(${R}, ${G}, ${B})`;
+    this.hsla = `hsl(${H}, ${S}, ${L})`;
+    this.hex = color;
+  }
+}
+
 const hueInputs = document.querySelectorAll(".H-input");
 const saturationInputs = document.querySelectorAll(".S-input");
 const luminanceInputs = document.querySelectorAll(".L-input");
@@ -25,10 +40,9 @@ const color = new Color();
 updateRGBA();
 updateHSLA();
 updateColorPreview(
-  Color.RGBAtoHEX(
-    Color.HSLAtoRGBA({ H: color.H, S: color.S, L: color.L, A: color.A })
-  )
+  Color.HSLAtoHEX({ H: color.H, S: color.S, L: color.L, A: color.A })
 );
+
 hueInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.H = parseInt(input.value);
@@ -38,6 +52,7 @@ hueInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 saturationInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.S = parseInt(input.value);
@@ -48,6 +63,7 @@ saturationInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 luminanceInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.L = parseInt(input.value);
@@ -58,6 +74,7 @@ luminanceInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 redInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.R = parseInt(input.value);
@@ -68,6 +85,7 @@ redInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 greenInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.G = parseInt(input.value);
@@ -78,6 +96,7 @@ greenInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 blueInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.B = parseInt(input.value);
@@ -88,6 +107,7 @@ blueInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 alphaInputs.forEach(input => {
   input.addEventListener("input", () => {
     color.A = parseInt(input.value);
@@ -96,6 +116,7 @@ alphaInputs.forEach(input => {
     updateColorPreview(color.hex);
   });
 });
+
 function updateRGBA() {
   R_number.value = color.R;
   R_slider.value = color.R;
@@ -106,6 +127,7 @@ function updateRGBA() {
   A_number.value = color.A;
   A_slider.value = color.A;
 }
+
 function updateHSLA() {
   H_number.value = color.H;
   H_slider.value = color.H;
@@ -129,6 +151,7 @@ function updateColorPreview(hex) {
       })
     )
   );
+
   displayColorCombination("monochromatic", color.monochromatic());
   displayColorCombination("analogous", color.analogous());
   displayColorCombination("complementary", color.complementary());
@@ -136,15 +159,53 @@ function updateColorPreview(hex) {
   displayColorCombination("triad", color.triad());
   displayColorCombination("double-complementary", color.doubleComplementary());
 }
+
 function displayColorCombination(name, combination) {
   const container = document.getElementById(name).querySelector(".colors");
   container.innerHTML = "";
+
   for (const [ key, value ] of Object.entries(combination)) {
     if (combination.hasOwnProperty(key)) {
-      const div = document.createElement("div");
-      div.className = name;
-      div.style.backgroundColor = value.toString();
-      container.appendChild(div);
+      const color = document.createElement("div");
+      const colorInfo = new ColorInfo(value);
+      const tooltip = colorTooltip(colorInfo);
+
+      color.className = "color";
+      color.style.backgroundColor = value.toString();
+
+      color.addEventListener("click", event => {
+        if (event.target === color) tooltip.classList.toggle("hidden");
+      });
+
+      color.appendChild(tooltip);
+      container.appendChild(color);
     }
   }
+}
+
+function colorTooltip(colorInfo: ColorInfo) {
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip hidden";
+
+  tooltip.addEventListener("click", event => {
+    if (event.target === tooltip) tooltip.classList.toggle("hidden");
+  });
+
+  tooltip.addEventListener("mouseleave", event => {
+    const hidden = event.target.classList.contains("hidden");
+
+    if (!hidden) tooltip.classList.toggle("hidden");
+  });
+
+  for (const [ type, value ] of Object.entries(colorInfo)) {
+    if (colorInfo.hasOwnProperty(type)) {
+      const span = document.createElement("span");
+      span.innerText = value;
+      tooltip.appendChild(span);
+    }
+
+    tooltip.style.backgroundColor = value.toString();
+  }
+
+  return tooltip;
 }

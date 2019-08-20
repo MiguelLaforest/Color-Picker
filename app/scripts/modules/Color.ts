@@ -7,6 +7,7 @@ export default class Color {
   _B: number;
   _A: number;
   _hex: string;
+
   constructor() {
     this._H = 220;
     this._S = 85;
@@ -17,6 +18,7 @@ export default class Color {
     this._A = 1;
     this._hex = "#000000";
   }
+
   //SECTION GETTERS
   get H() {
     return this._H;
@@ -69,6 +71,7 @@ export default class Color {
   set hex(color) {
     this.hex = color;
   }
+
   //!SECTION SETTERS
   hsla() {
     const { H, S, L, A } = Color.RGBAtoHSLA({
@@ -83,6 +86,7 @@ export default class Color {
     this.A = A;
     return { H, S, L, A };
   }
+
   rgba() {
     const { R, G, B, A } = Color.HSLAtoRGBA({
       H: this.H,
@@ -96,35 +100,42 @@ export default class Color {
     this.A = A;
     return { R, G, B, A };
   }
+
   complementary() {
     const complementaryHue = (this.H + 180) % 360;
-    const complementary = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: complementaryHue, S: this.S, L: this.L, A: this.A })
-    );
+    const complementary = Color.HSLAtoHEX({
+      H: complementaryHue,
+      S: this.S,
+      L: this.L,
+      A: this.A
+    });
     return { complementary: complementary };
   }
+
   splitComplementary() {
     const complementaryHue = (this.H + 180) % 360;
     const split1 = (complementaryHue + 30) % 360;
     const split2 = (complementaryHue - 30) % 360;
-    const s1 = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: split1, S: this.S, L: this.L, A: this.A })
-    );
-    const s2 = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: split2, S: this.S, L: this.L, A: this.A })
-    );
+    const s1 = Color.HSLAtoHEX({ H: split1, S: this.S, L: this.L, A: this.A });
+    const s2 = Color.HSLAtoHEX({ H: split2, S: this.S, L: this.L, A: this.A });
     return { "complementary-1": s1, "complementary-2": s2 };
   }
   doubleComplementary() {
     const complementaryHue = (this.H + 180) % 360;
     const adjacentHue = (this.H + 30) % 360;
     const adjacentComplementaryHue = (adjacentHue + 180) % 360;
-    const adjacent = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: adjacentHue, S: this.S, L: this.L, A: this.A })
-    );
-    const complementary = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: complementaryHue, S: this.S, L: this.L, A: this.A })
-    );
+    const adjacent = Color.HSLAtoHEX({
+      H: adjacentHue,
+      S: this.S,
+      L: this.L,
+      A: this.A
+    });
+    const complementary = Color.HSLAtoHEX({
+      H: complementaryHue,
+      S: this.S,
+      L: this.L,
+      A: this.A
+    });
     const adjacentComplementary = Color.RGBAtoHEX(
       Color.HSLAtoRGBA({
         H: adjacentComplementaryHue,
@@ -139,42 +150,54 @@ export default class Color {
       adjacentComplementary: adjacentComplementary
     };
   }
+
   triad() {
     const triad1 = (this.H + 120) % 360;
     const triad2 = (this.H - 120) % 360;
-    const t1 = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: triad1, S: this.S, L: this.L, A: this.A })
-    );
-    const t2 = Color.RGBAtoHEX(
-      Color.HSLAtoRGBA({ H: triad2, S: this.S, L: this.L, A: this.A })
-    );
+    const t1 = Color.HSLAtoHEX({ H: triad1, S: this.S, L: this.L, A: this.A });
+    const t2 = Color.HSLAtoHEX({ H: triad2, S: this.S, L: this.L, A: this.A });
     return { "triad-1": t1, "triad-2": t2 };
   }
+
   monochromatic() {
     const mono = [];
-    for (let l = 0; l < 100; l += 5) {
-      mono.push(
-        Color.RGBAtoHEX(
-          Color.HSLAtoRGBA({ H: this.H, S: this.S, L: l, A: this.A })
-        )
-      );
+    for (let l = this.L - 30; l <= this.L + 30; l += 15) {
+      mono.push(Color.HSLAtoHEX({ H: this.H, S: this.S, L: l, A: this.A }));
     }
     return mono;
   }
+
   analogous() {
     const analogous = [];
     for (let i = 1; i <= 5; i++) {
       const h = (this.H + i * 15) % 360;
-      console.log("h:", h);
+
       analogous.push(
-        Color.RGBAtoHEX(
-          Color.HSLAtoRGBA({ H: h, S: this.S, L: this.L, A: this.A })
-        )
+        Color.HSLAtoHEX({ H: h, S: this.S, L: this.L, A: this.A })
       );
     }
-    console.log("mono:", analogous);
+
     return analogous;
   }
+
+  static HEXtoRGBA(hex) {
+    const rbgvalues = hex
+      .replace("#", "")
+      .split(/(\w{2})/)
+      .filter(el => el.length !== 0);
+    const [ R, G, B, A ] = rbgvalues.map(value => parseInt(value, 16));
+    return { R, G, B, A };
+  }
+
+  static HEXtoHSLA(hex) {
+    const rbgvalues = hex
+      .replace("#", "")
+      .split(/(\w{2})/)
+      .filter(el => el.length !== 0);
+    const [ R, G, B, A ] = rbgvalues.map(value => parseInt(value, 16));
+    return Color.RGBAtoHSLA({ R, G, B, A });
+  }
+
   static RGBAtoHEX({ R, G, B, A = 100 }) {
     let HEXR =
       R.toString(16).length === 2 ? R.toString(16) : "0" + R.toString(16);
@@ -184,14 +207,32 @@ export default class Color {
       B.toString(16).length === 2 ? B.toString(16) : "0" + B.toString(16);
     return `#${HEXR}${HEXG}${HEXB}`;
   }
-  static HEXtoRGBA(hex) {
-    const rbgvalues = hex
-      .replace("#", "")
-      .split(/(\w{2})/)
-      .filter(el => el.length !== 0);
-    const [ R, G, B, A ] = rbgvalues.map(value => parseInt(value, 16));
-    return { R, G, B, A };
+
+  static RGBAtoHSLA({ R, G, B, A = 100 }) {
+    let H, S, L;
+    R = R / 255;
+    G = G / 255;
+    B = B / 255;
+    const min = Math.min(R, G, B);
+    const max = Math.max(R, G, B);
+    L = (min + max) / 2;
+    S =
+      min == max
+        ? 0
+        : L < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
+    H =
+      max == R
+        ? (G - B) / (max - min) * 60
+        : max == G
+          ? 2.0 + (B - R) / (max - min) * 60
+          : 4.0 + (R - G) / (max - min) * 60;
+    H = H < 0 ? H + 360 : H;
+    H = Math.round(H);
+    S = Math.round(S * 100);
+    L = Math.round(L * 100);
+    return { H, S, L, A };
   }
+
   //https://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/
   static HSLAtoRGBA({ H, S, L, A = 1 }) {
     let R = 0;
@@ -204,6 +245,7 @@ export default class Color {
     let tempB = 0;
     L = L / 100;
     S = S / 100;
+
     if (S === 0) {
       const value = Math.round(L * 255);
       R = value;
@@ -241,31 +283,8 @@ export default class Color {
       return { R, G, B, A };
     }
   }
-  static RGBAtoHSLA({ R, G, B, A = 100 }) {
-    let H, S, L;
-    R = R / 255;
-    G = G / 255;
-    B = B / 255;
-    const min = Math.min(R, G, B);
-    const max = Math.max(R, G, B);
-    L = (min + max) / 2;
-    console.log("L:", L);
-    S =
-      min == max
-        ? 0
-        : L < 0.5 ? (max - min) / (max + min) : (max - min) / (2 - max - min);
-    console.log("S:", S);
-    H =
-      max == R
-        ? (G - B) / (max - min) * 60
-        : max == G
-          ? 2.0 + (B - R) / (max - min) * 60
-          : 4.0 + (R - G) / (max - min) * 60;
-    H = H < 0 ? H + 360 : H;
-    console.log("H:", H);
-    H = Math.round(H);
-    S = Math.round(S * 100);
-    L = Math.round(L * 100);
-    return { H, S, L, A };
+
+  static HSLAtoHEX({ H, S, L, A = 1 }) {
+    return Color.RGBAtoHEX(Color.HSLAtoRGBA({ H, S, L, A }));
   }
 }
